@@ -18,11 +18,7 @@ class SDS011SerialSensor(val serialPort: String) extends AirQualitySensor{
     reading / 10.0
   }
 
-  /**
-   * Returns the 2.5 micrometers particulate count
-   *
-   * @return
-   */
+
   override def pm25(): Double = {
     /* the pm25 reading is in bytes 2 and 3 of the reading 0 indexed
       in little endian order
@@ -30,11 +26,7 @@ class SDS011SerialSensor(val serialPort: String) extends AirQualitySensor{
     getReading(2, 3)
   }
 
-  /**
-   * Return the 10 micrometers particulate count
-   *
-   * @return
-   */
+
   override def pm100(): Double = {
     /** The pm 10 micrometers count is in bytes 4 and 5 of the reading
      * 0 indexed, in little endian order*/
