@@ -1,3 +1,5 @@
 name := "Aeras"
 version := "0.0.1"
-scalaversion := "2.13.3"
+scalaVersion := "2.13.3"
+
+libraryDependencies += "com.fazecast" % "jSerialComm" % "[2.0.0,3.0.0)"
