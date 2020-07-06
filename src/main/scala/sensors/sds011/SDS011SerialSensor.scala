@@ -8,7 +8,7 @@ class SDS011SerialSensor(val serialPort: AerasSerialPort) extends AirQualitySens
   // the sds011 sends data in 10 byte increments
   val sampleLengthBytes = 10
   var lastRead: Array[Byte] = new Array[Byte](0)
-  val commandGenerator = new SDS011CommandGenerator
+//  val commandGenerator = new SDS011CommandGenerator
 
 
   def getReading(lowerByteIndex: Int, higherByteIndex: Int): Double = {
