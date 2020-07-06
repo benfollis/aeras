@@ -12,6 +12,15 @@ class SDS011SerialSensorTest extends AnyFunSuite with MockFactory {
     sensor.read()
   }
 
+  test("PM25 correctly reports 2.4") {
+    val portMock = mock[AerasSerialPort]
+    (portMock.readBytes _).expects(10).returns(Array(0,0,24,0))
+    val sensor = new SDS011SerialSensor(portMock)
+    sensor.read()
+    assert(sensor.pm25() === 2.4)
+  }
+
+
   test("PM25 correctly reports 25.0") {
     val portMock = mock[AerasSerialPort]
     (portMock.readBytes _).expects(10).returns(Array(0,0,250.toByte,0))
