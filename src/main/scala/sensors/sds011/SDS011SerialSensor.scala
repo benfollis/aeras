@@ -1,19 +1,19 @@
 package sensors.sds011
 
 import sensors.AirQualitySensor
-import com.fazecast.jSerialComm.SerialPort
 
-class SDS011SerialSensor(val serialPort: String) extends AirQualitySensor{
 
-  var lastRead: Array[Byte] = new Array[Byte](0)
-  val commandGenerator = new SDS011CommandGenerator
+class SDS011SerialSensor(val serialPort: AerasSerialPort) extends AirQualitySensor{
+
   // the sds011 sends data in 10 byte increments
   val sampleLengthBytes = 10
+  var lastRead: Array[Byte] = new Array[Byte](0)
+  val commandGenerator = new SDS011CommandGenerator
 
 
   def getReading(lowerByteIndex: Int, higherByteIndex: Int): Double = {
-    val firstBits: Int = lastRead(lowerByteIndex)
-    val secondBits: Int = lastRead(higherByteIndex) << 8 //shifted one byte over
+    val firstBits: Int = lastRead(lowerByteIndex) & 0xFF // byte to int conversion
+    val secondBits: Int = (lastRead(higherByteIndex) & 0xFF) << 8 //shifted one byte over and byte to int conversion
     val reading = firstBits + secondBits;
     reading / 10.0
   }
@@ -34,15 +34,6 @@ class SDS011SerialSensor(val serialPort: String) extends AirQualitySensor{
   }
 
   override def read(): Unit = {
-    val port = SerialPort.getCommPort(serialPort)
-    port.openPort()
-    port.setBaudRate(9600)
-    port.setComPortTimeouts(SerialPort.TIMEOUT_WRITE_BLOCKING, 0, 0)
-    val out = port.getOutputStream
-    lastRead = new Array[Byte](sampleLengthBytes)
-    port.setComPortTimeouts(SerialPort.TIMEOUT_READ_BLOCKING, 0, 0)
-    val readBytes = port.readBytes(lastRead, sampleLengthBytes);
-    // put us back to sleep
-
+    lastRead = serialPort.readBytes(sampleLengthBytes)
   }
 }
